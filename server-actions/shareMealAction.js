@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { saveMeal } from "@/database/meals";
+import { revalidatePath } from "next/cache";
 
 function isValidText(text) {
   return text && text.trim() !== "";
@@ -25,5 +26,7 @@ export default async function shareMealAction(prevState, formData) {
     }
   }
     await saveMeal(meal);
+    // regenerate caching
+    revalidatePath("/meals")
   return redirect("/meals");
 }
